@@ -58,6 +58,9 @@ h1,h2,h3,h4{font-family:var(--f-display);margin:0;letter-spacing:-.01em}
 .brand{font-family:var(--f-display);font-weight:900;font-size:30px;letter-spacing:-.03em;line-height:1}
 .brand span{background:linear-gradient(90deg,var(--d1),var(--d4b) 45%,var(--d4) 70%,var(--d2));-webkit-background-clip:text;background-clip:text;color:transparent}
 .sub{color:var(--muted);font-size:13px;margin-top:4px}
+.brandrow{display:flex;align-items:center;gap:12px}
+.mark{width:48px;height:48px;flex:none;filter:drop-shadow(0 4px 10px rgb(23 21 28/.18))}
+@media (prefers-color-scheme:dark){.mark>rect{stroke:rgb(255 255 255/.14);stroke-width:16}}
 .iconbtn{width:42px;height:42px;border-radius:50%;background:var(--surface);box-shadow:var(--shadow);display:grid;place-items:center}
 .iconbtn svg{width:20px;height:20px}
 
@@ -229,10 +232,10 @@ details.tech p{margin:8px 0 0;font-size:14px}
 <body>
 <div class="wrap">
   <header class="top">
-    <div>
+    <div class="brandrow"><svg class="mark" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="116" fill="#17151c"/><path d="M276.9 107.5A150 150 0 0 1 404.5 235.1" fill="none" stroke="#ff5a36" stroke-width="40" stroke-linecap="round"/><path d="M404.5 276.9A150 150 0 0 1 276.9 404.5" fill="none" stroke="#2f6bff" stroke-width="40" stroke-linecap="round"/><path d="M235.1 404.5A150 150 0 0 1 107.5 276.9" fill="none" stroke="#00a878" stroke-width="40" stroke-linecap="round"/><path d="M107.5 235.1A150 150 0 0 1 235.1 107.5" fill="none" stroke="#9b4dff" stroke-width="40" stroke-linecap="round"/><g transform="rotate(-45 256 256)" fill="#fff"><rect x="190" y="243" width="132" height="26" rx="13"/><rect x="170" y="196" width="40" height="120" rx="14"/><rect x="142" y="216" width="30" height="80" rx="12"/><rect x="302" y="196" width="40" height="120" rx="14"/><rect x="340" y="216" width="30" height="80" rx="12"/></g></svg><div>
       <div class="brand"><span>FormFit</span></div>
-      <div class="sub">Spor salonu · Üst / Alt bölünme · haftada 4 gün</div>
-    </div>
+      <div class="sub">Spor salonu · haftada 4 gün</div>
+    </div></div>
     <button class="iconbtn" id="setBtn" aria-label="Ayarlar">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
     </button>
