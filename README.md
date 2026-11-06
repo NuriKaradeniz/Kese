@@ -32,3 +32,17 @@ Koşarken adım ritmimi tuttuğum metronom.
 - Ekran açık kalır, internetsiz çalışır
 
 Uygulama: https://nurikaradeniz.github.io/C-zdan/metronom/
+
+---
+
+# FormFit
+
+Haftada 4 gün evde, ekipmansız yaptığım antrenman programı.
+
+- 4 gün: Bacak & Kalça, Göğüs & Kol, Karın & Sırt, Tüm Vücut (19 hareket)
+- Her hareket animasyonlu figürle gösteriliyor, sade adımlar, kolay hali ve Almanca adı var
+- Antrenman modu: set sayacı, süre ve mola zamanlayıcısı, sesli uyarı, ekran açık kalır
+- Seviye (2/3/4 set) ve antrenman günleri vardiyaya göre değiştirilebilir
+- İnternetsiz çalışır, veriler sadece telefonda kalır
+
+Uygulama: https://nurikaradeniz.github.io/C-zdan/formfit/
