@@ -24,6 +24,8 @@
   --d3:#00a878; --d3b:#8edb4f; --d3d:#00744f; --d3s:#e6f7ef;
   --d4:#7b3ff2; --d4b:#f23c9b; --d4d:#5523c2; --d4s:#f3ecff;
   --good:#00a878;
+  --fig-skin:#eab38a; --fig-skin-far:#c98e66; --fig-hair:#2b211b; --fig-shorts:#2e2b40; --fig-shorts-far:#1f1d2c; --fig-shoe:#1f1d2c;
+  --fig-floor:rgb(23 21 28/.045); --fig-shadow:rgb(23 21 28/.16); --fig-prop:#cdc6bb; --panel:rgb(255 255 255/.94);
   --shadow:0 1px 2px rgb(23 21 28/.06),0 6px 20px rgb(23 21 28/.07);
   --f-display:ui-rounded,"SF Pro Rounded","Nunito",ui-sans-serif,system-ui,sans-serif;
   --f-body:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -32,11 +34,17 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#121117; --surface:#1c1b23; --surface-2:#25232d; --ink:#f3f1f7; --muted:#9d99a8; --line:#2d2b36;
   --d1d:#ff8a6a; --d1s:#2c1a17; --d2d:#7fa4ff; --d2s:#161d30; --d3d:#4fd6a4; --d3s:#13261f; --d4d:#b590ff; --d4s:#211a33;
-  --shadow:0 1px 2px rgb(0 0 0/.3),0 8px 24px rgb(0 0 0/.25); color-scheme:dark }}
+  --shadow:0 1px 2px rgb(0 0 0/.3),0 8px 24px rgb(0 0 0/.25); color-scheme:dark;
+  --fig-skin:#e4ab80; --fig-skin-far:#b77f5a; --fig-hair:#161115; --fig-shorts:#4b4663; --fig-shorts-far:#34304a; --fig-shoe:#ecebf3;
+  --fig-floor:rgb(255 255 255/.04); --fig-shadow:rgb(0 0 0/.4); --fig-prop:#3d3a4a; --panel:rgb(28 27 35/.92);
+}}
 :root[data-theme="dark"]{
   --bg:#121117; --surface:#1c1b23; --surface-2:#25232d; --ink:#f3f1f7; --muted:#9d99a8; --line:#2d2b36;
   --d1d:#ff8a6a; --d1s:#2c1a17; --d2d:#7fa4ff; --d2s:#161d30; --d3d:#4fd6a4; --d3s:#13261f; --d4d:#b590ff; --d4s:#211a33;
-  --shadow:0 1px 2px rgb(0 0 0/.3),0 8px 24px rgb(0 0 0/.25); color-scheme:dark }
+  --shadow:0 1px 2px rgb(0 0 0/.3),0 8px 24px rgb(0 0 0/.25); color-scheme:dark;
+  --fig-skin:#e4ab80; --fig-skin-far:#b77f5a; --fig-hair:#161115; --fig-shorts:#4b4663; --fig-shorts-far:#34304a; --fig-shoe:#ecebf3;
+  --fig-floor:rgb(255 255 255/.04); --fig-shadow:rgb(0 0 0/.4); --fig-prop:#3d3a4a; --panel:rgb(28 27 35/.92);
+}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;
@@ -80,7 +88,7 @@ h1,h2,h3{font-family:var(--f-display);margin:0;letter-spacing:-.01em}
 .today .meta{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 14px}
 .pill{font-size:12px;font-weight:700;padding:5px 10px;border-radius:99px;background:rgb(255 255 255/.22);white-space:nowrap}
 .go{background:#fff;color:var(--cd,#111);font-weight:800;border-radius:99px;padding:12px 18px;font-size:15px;white-space:nowrap;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgb(0 0 0/.15)}
-.today .fig{width:128px;height:128px;border-radius:24px;background:rgb(255 255 255/.18)}
+.today .fig{width:128px;height:128px;border-radius:24px;background:var(--panel);overflow:hidden}
 .today .blob{position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgb(255 255 255/.12);pointer-events:none}
 .rest{background:var(--surface);color:var(--ink)}
 .rest .pill{background:var(--surface-2)}
@@ -102,7 +110,7 @@ h1,h2,h3{font-family:var(--f-display);margin:0;letter-spacing:-.01em}
 .day .n{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.9}
 .day h4{font-family:var(--f-display);font-size:18px;line-height:1.1;margin:4px 0 0;font-weight:900}
 .day .de{font-size:12px;opacity:.88}
-.day .fig{width:100%;height:86px;margin:auto 0 4px}
+.day .fig{display:block;width:100%;height:96px;margin:auto 0 8px;border-radius:16px;background:var(--panel);overflow:hidden}
 .day .m{font-size:12px;font-weight:700;opacity:.95}
 .day .ok{position:absolute;top:12px;right:12px;width:24px;height:24px;border-radius:50%;background:#fff;color:var(--cd);display:grid;place-items:center;font-weight:900;font-size:13px}
 
@@ -135,13 +143,13 @@ h1,h2,h3{font-family:var(--f-display);margin:0;letter-spacing:-.01em}
 .warm li{margin:2px 0}
 
 .ex{display:grid;grid-template-columns:84px 1fr auto;gap:12px;align-items:center;background:var(--surface);border-radius:18px;padding:8px 12px 8px 8px;margin-bottom:10px;box-shadow:var(--shadow);text-align:left;width:100%}
-.ex .fig{width:84px;height:84px;border-radius:14px;background:var(--cs)}
+.ex .fig{width:84px;height:84px;border-radius:14px;background:var(--cs);overflow:hidden}
 .ex h5{margin:0;font-family:var(--f-display);font-size:16px;font-weight:800}
 .ex .de{color:var(--muted);font-size:12.5px}
 .ex .dose{font-weight:800;color:var(--cd);font-size:14px;margin-top:3px}
 .ex .chev{color:var(--muted);font-size:22px}
 
-.big{background:var(--cs);border-radius:24px;aspect-ratio:1.2;width:100%}
+.big{background:var(--cs);border-radius:24px;aspect-ratio:1.2;width:100%;overflow:hidden}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
 .chip{font-size:12px;font-weight:700;padding:5px 10px;border-radius:99px;background:var(--cs);color:var(--cd)}
 .block{background:var(--surface);border-radius:18px;padding:14px 16px;margin-top:10px;box-shadow:var(--shadow)}
@@ -276,56 +284,89 @@ function lpPose(a,b,u){const o={};for(const k in a)o[k]=lp(a[k],b[k]===undefined
 function solve(p,A){
   const t=p.t*D,sv=[Math.sin(t),-Math.cos(t)];
   const sh=[p.hip[0]+sv[0]*L.to,p.hip[1]+sv[1]*L.to];
-  const hd=(p.t+p.hn)*D,head=[sh[0]+Math.sin(hd)*L.nk,sh[1]-Math.cos(hd)*L.nk];
+  const hd=(p.t+p.hn)*D,up=[Math.sin(hd),-Math.cos(hd)],fwd=[Math.cos(hd),Math.sin(hd)];
+  const head=[sh[0]+up[0]*L.nk,sh[1]+up[1]*L.nk];
   let sA=sh,sB=sh,hA=p.hip,hB=p.hip;
   if(A.front){const ox=Math.cos(t),oy=Math.sin(t);
-    sA=[sh[0]+ox*14,sh[1]+oy*14];sB=[sh[0]-ox*14,sh[1]-oy*14];
+    sA=[sh[0]+ox*15,sh[1]+oy*15];sB=[sh[0]-ox*15,sh[1]-oy*15];
     hA=[p.hip[0]+ox*9,p.hip[1]+oy*9];hB=[p.hip[0]-ox*9,p.hip[1]-oy*9];}
   const k=A.k||[1,1],e=A.e||[-1,-1];
   const [kA,aA]=ik(hA,p.fa,L.th,L.sh,k[0]),[kB,aB]=ik(hB,p.fb,L.th,L.sh,k[1]);
   const [eA,wA]=ik(sA,p.ha,L.ua,L.fa,e[0]),[eB,wB]=ik(sB,p.hb,L.ua,L.fa,e[1]);
   const toe=(an,f)=>A.front?an:[an[0]+Math.cos(f*D)*L.ft,an[1]+Math.sin(f*D)*L.ft];
-  return {sh,head,sA,sB,hA,hB,hip:p.hip,legA:[hA,kA,aA,toe(aA,p.ft[0])],legB:[hB,kB,aB,toe(aB,p.ft[1])],armA:[sA,eA,wA],armB:[sB,eB,wB],front:A.front};
+  return {sh,head,up,fwd,sA,sB,hA,hB,hip:p.hip,legA:[hA,kA,aA,toe(aA,p.ft[0])],legB:[hB,kB,aB,toe(aB,p.ft[1])],armA:[sA,eA,wA],armB:[sB,eB,wB],front:A.front};
 }
+const mix=(p,q,u)=>[p[0]+(q[0]-p[0])*u,p[1]+(q[1]-p[1])*u];
+const seg=(p,q)=>`M${p[0].toFixed(1)} ${p[1].toFixed(1)}L${q[0].toFixed(1)} ${q[1].toFixed(1)}`;
 const pts=a=>"M"+a.map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join("L");
 const ease=u=>.5-.5*Math.cos(Math.PI*u);
 const NS="http://www.w3.org/2000/svg";
 function el(n,a,p){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+// colors come from CSS custom properties so light/dark and day themes apply
+function paint(e,fill,stroke,w){if(fill)e.style.fill=fill;else e.style.fill="none";if(stroke){e.style.stroke=stroke;e.setAttribute("stroke-width",w);e.setAttribute("stroke-linecap","round");e.setAttribute("stroke-linejoin","round")}return e}
 
 const animators=new Set();
 class Fig{
-  constructor(host,anim,opt){
+  constructor(host,anim){
     this.a=anim;this.t0=performance.now()-Math.random()*800;this.vis=true;
     const s=el("svg",{viewBox:"-20 -22 240 212","aria-hidden":"true",preserveAspectRatio:"xMidYMid meet"});
-    s.style.cssText="width:100%;height:100%;display:block";
-    const light=opt&&opt.light;
-    const ink=light?"#fff":"var(--cd)", far=light?"rgb(255 255 255/.55)":"var(--c)";
-    el("ellipse",{cx:100,cy:179,rx:96,ry:5,fill:light?"rgb(255 255 255/.18)":"var(--c)",opacity:light?1:.14},s);
-    if(anim.prop==="wall")el("rect",{x:44,y:-22,width:10,height:200,rx:3,fill:light?"rgb(255 255 255/.3)":"var(--muted)",opacity:light?1:.3},s);
-    if(anim.prop==="bench"){const g=el("g",{fill:light?"rgb(255 255 255/.32)":"var(--muted)",opacity:light?1:.35},s);
-      el("rect",{x:-6,y:120,width:68,height:8,rx:3},g);el("rect",{x:0,y:126,width:6,height:52,rx:2},g);el("rect",{x:50,y:126,width:6,height:52,rx:2},g);
-      el("rect",{x:-6,y:60,width:7,height:66,rx:3},g);}
-    const L9={fill:"none","stroke-linecap":"round","stroke-linejoin":"round"};
-    this.legB=el("path",{...L9,stroke:far,"stroke-width":9},s);
-    this.armB=el("path",{...L9,stroke:far,"stroke-width":8},s);
-    this.torso=el("path",{...L9,stroke:ink,"stroke-width":anim.front?10:15,fill:anim.front?ink:"none"},s);
-    this.head=el("circle",{r:L.hr,fill:ink},s);
-    this.legA=el("path",{...L9,stroke:ink,"stroke-width":9},s);
-    this.armA=el("path",{...L9,stroke:ink,"stroke-width":8},s);
-    if(anim.front){this.legB.setAttribute("stroke",ink);this.armB.setAttribute("stroke",ink)}
+    s.style.cssText="width:100%;height:100%;display:block;overflow:visible";
+    const fr=anim.front;
+    el("rect",{x:-40,y:178,width:280,height:40,rx:0},s).style.fill="var(--fig-floor)";
+    this.shadow=el("ellipse",{cx:100,cy:179,rx:60,ry:5},s);this.shadow.style.fill="var(--fig-shadow)";
+    if(anim.prop==="wall"){const w=el("rect",{x:36,y:-30,width:18,height:208,rx:2},s);w.style.fill="var(--fig-prop)"}
+    if(anim.prop==="bench"){const g=el("g",{},s);g.style.fill="var(--fig-prop)";
+      el("rect",{x:-8,y:120,width:72,height:9,rx:4},g);el("rect",{x:-2,y:126,width:7,height:52,rx:2},g);el("rect",{x:52,y:126,width:7,height:52,rx:2},g);
+      el("rect",{x:-8,y:58,width:8,height:68,rx:4},g);}
+    const skin=fr?"var(--fig-skin)":"var(--fig-skin-far)",shirt=fr?"var(--c)":"var(--cd)",shorts=fr?"var(--fig-shorts)":"var(--fig-shorts-far)";
+    const limb=(far)=>{const sk=far?skin:"var(--fig-skin)",sht=far?shirt:"var(--c)",sho=far?shorts:"var(--fig-shorts)";return {
+      shin:paint(el("path",{},s),0,sk,11), shoe:paint(el("path",{},s),0,"var(--fig-shoe)",fr?10:9),
+      thigh:paint(el("path",{},s),0,sk,14.5), short:paint(el("path",{},s),0,sho,18),
+      fore:paint(el("path",{},s),0,sk,8.5), hand:paint(el("circle",{r:5},s),sk),
+      upper:paint(el("path",{},s),0,sk,10.5), sleeve:paint(el("path",{},s),0,sht,13)}};
+    this.B=limb(true);
+    this.neck=paint(el("path",{},s),0,"var(--fig-skin)",9);
+    this.torso=paint(el("path",{},s),fr?"var(--c)":0,"var(--c)",fr?14:24);
+    this.waist=paint(el("path",{},s),fr?"var(--fig-shorts)":0,"var(--fig-shorts)",fr?14:24);
+    this.hair=paint(el("circle",{r:12.4},s),"var(--fig-hair)");
+    this.head=paint(el("circle",{r:11.5},s),"var(--fig-skin)");
+    this.eye=paint(el("circle",{r:1.9},s),"var(--fig-hair)");
+    this.eye2=fr?paint(el("circle",{r:1.9},s),"var(--fig-hair)"):null;
+    this.A=limb(false);
     host.appendChild(s);this.svg=s;this.host=host;
     if(io)io.observe(host);host._fig=this;
     animators.add(this);this.draw(performance.now());
+  }
+  limb(o,leg,arm){
+    o.thigh.setAttribute("d",seg(leg[0],leg[1]));o.shin.setAttribute("d",seg(leg[1],leg[2]));
+    o.shoe.setAttribute("d",this.a.front?seg(leg[2],[leg[2][0],leg[2][1]+1]):seg(leg[2],leg[3]));
+    o.short.setAttribute("d",seg(leg[0],mix(leg[0],leg[1],.45)));
+    o.upper.setAttribute("d",seg(arm[0],arm[1]));o.fore.setAttribute("d",seg(arm[1],arm[2]));
+    o.sleeve.setAttribute("d",seg(arm[0],mix(arm[0],arm[1],.42)));
+    o.hand.setAttribute("cx",arm[2][0].toFixed(1));o.hand.setAttribute("cy",arm[2][1].toFixed(1));
   }
   draw(now){
     const a=this.a,n=a.kf.length,ds=a.d,total=ds.reduce((x,y)=>x+y,0);
     let m=(now-this.t0)%total,i=0;while(m>ds[i]){m-=ds[i];i++}
     let u=m/ds[i];if(!a.lin)u=ease(u);
     const p=lpPose(a.kf[i],a.kf[(i+1)%n],u),f=solve(p,a);
-    this.legA.setAttribute("d",pts(f.legA));this.legB.setAttribute("d",pts(f.legB));
-    this.armA.setAttribute("d",pts(f.armA));this.armB.setAttribute("d",pts(f.armB));
-    this.torso.setAttribute("d",f.front?pts([f.sA,f.sB,f.hB,f.hA])+"Z":pts([f.hip,f.sh]));
-    this.head.setAttribute("cx",f.head[0].toFixed(1));this.head.setAttribute("cy",f.head[1].toFixed(1));
+    this.limb(this.A,f.legA,f.armA);this.limb(this.B,f.legB,f.armB);
+    const set=(e,x,y)=>{e.setAttribute("cx",x.toFixed(1));e.setAttribute("cy",y.toFixed(1))};
+    if(f.front){
+      this.torso.setAttribute("d",pts([f.sA,f.sB,mix(f.hB,f.sB,.25),mix(f.hA,f.sA,.25)])+"Z");
+      this.waist.setAttribute("d",pts([mix(f.hA,f.sA,.25),mix(f.hB,f.sB,.25),f.hB,f.hA])+"Z");
+    }else{
+      this.torso.setAttribute("d",seg(mix(f.hip,f.sh,.12),f.sh));
+      this.waist.setAttribute("d",seg(f.hip,mix(f.hip,f.sh,.2)));
+    }
+    this.neck.setAttribute("d",seg(f.sh,mix(f.sh,f.head,.6)));
+    const h=f.head;set(this.head,h[0],h[1]);
+    if(f.front){set(this.hair,h[0]+f.up[0]*3.2,h[1]+f.up[1]*3.2);
+      set(this.eye,h[0]+f.fwd[0]*4.2+f.up[0]*.5,h[1]+f.fwd[1]*4.2+f.up[1]*.5);set(this.eye2,h[0]-f.fwd[0]*4.2+f.up[0]*.5,h[1]-f.fwd[1]*4.2+f.up[1]*.5);}
+    else{set(this.hair,h[0]-f.fwd[0]*3+f.up[0]*2.6,h[1]-f.fwd[1]*3+f.up[1]*2.6);
+      set(this.eye,h[0]+f.fwd[0]*6.6+f.up[0]*1.6,h[1]+f.fwd[1]*6.6+f.up[1]*1.6);}
+    const cx=(f.legA[2][0]+f.legB[2][0]+f.hip[0]+f.sh[0])/4;
+    this.shadow.setAttribute("cx",cx.toFixed(1));this.shadow.setAttribute("rx",f.front?46:Math.max(40,Math.abs(f.head[0]-f.legA[2][0])/2+18).toFixed(1));
   }
 }
 const io="IntersectionObserver" in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.target._fig)e.target._fig.vis=e.isIntersecting}),{rootMargin:"40px"}):null;
@@ -358,7 +399,10 @@ const A={
     e1=P([112,166],-90,[152,126],[192,158],[6,160],[60,108]),
     e2=P([112,166],-90,[192,158],[150,128],[64,108],[8,160]);
     return {kf:[b,e1,e1,b,e2,e2],d:[900,400,900,900,400,900]}})(),
-  jacks:{front:true,e:[1,-1],k:[1,-1],kf:[P([100,92],0,[106,172],[94,172],[118,99],[82,99]),P([100,88],0,[134,170],[66,170],[132,-14],[68,-14])],d:[380,380]},
+  jacks:(()=>{const c=P([100,92],0,[106,172],[94,172],[120,98],[80,98]),
+    m=P([100,86],0,[122,168],[78,168],[172,40],[28,40]),
+    o=P([100,90],0,[136,172],[64,172],[128,-14],[72,-14]);
+    return {front:true,e:[1,-1],k:[1,-1],kf:[c,m,o,m],d:[230,230,230,230]}})(),
   climber:{kf:[P([93.3,134],66.4,[110,164],[22,164],[140,172],[136,172],{ft:[70,70]}),P([93.3,134],66.4,[20,164],[110,164],[140,172],[136,172],{ft:[70,70]})],d:[340,340]},
   knees:{kf:[P([100,88],0,[132,128],[100,170],[84,84],[128,66],{ft:[30,40]}),P([100,88],0,[100,170],[132,128],[128,66],[84,84],{ft:[40,30]})],d:[320,320]},
   burpee:(()=>{const st=P([100,92],0,[106,172],[100,172],[104,98],[100,98]),
@@ -486,7 +530,7 @@ function render(){
       <div class="de" style="color:var(--muted)">${txt}</div>
       <div class="meta">${next?`<span class="pill">Sıradaki: ${next.w} · ${next.d.tr}</span>`:`<span class="pill">Bu haftanın 4 günü tamam!</span>`}</div>
       ${next?`<button class="go" data-open="${next.d.n}">Programa bak</button>`:""}</div>
-      <div class="fig" style="background:var(--cs)" data-fig="${next?next.d.ex[0][0]:"circles"}"></div></div>`;
+      <div class="fig" data-fig="${next?next.d.ex[0][0]:"circles"}"></div></div>`;
   }
   $("todayCard").innerHTML=card;
   const c=ds.size,R=22,C=2*Math.PI*R;
@@ -506,7 +550,7 @@ function render(){
   mountFigs(document.body);
 }
 function nextDay(ti){const ds=doneSet();for(let k=1;k<=7;k++){const w=(ti+k)%7,d=dayFor(w);if(d&&!ds.has(d.n))return{w:WD[w],d}}return null}
-function mountFigs(root){root.querySelectorAll("[data-fig]").forEach(h=>{if(h._fig)return;new Fig(h,A[h.dataset.fig],{light:!!h.dataset.light})})}
+function mountFigs(root){root.querySelectorAll("[data-fig]").forEach(h=>{if(h._fig)return;new Fig(h,A[h.dataset.fig])})}
 
 /* ---------- sheets ---------- */
 let sheetStack=[];
