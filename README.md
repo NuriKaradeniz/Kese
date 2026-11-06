@@ -37,12 +37,12 @@ Uygulama: https://nurikaradeniz.github.io/C-zdan/metronom/
 
 # FormFit
 
-Haftada 4 gün evde, ekipmansız yaptığım antrenman programı.
+Haftada 4 gün spor salonu programım: Üst / Alt vücut bölünmesi.
 
-- 4 gün: Bacak & Kalça, Göğüs & Kol, Karın & Sırt, Tüm Vücut (19 hareket)
-- Her hareket animasyonlu figürle gösteriliyor, sade adımlar, kolay hali ve Almanca adı var
-- Antrenman modu: set sayacı, süre ve mola zamanlayıcısı, sesli uyarı, ekran açık kalır
-- Seviye (2/3/4 set) ve antrenman günleri vardiyaya göre değiştirilebilir
+- Üst A (güç), Alt A (squat), Üst B (hacim), Alt B (deadlift): 26 hareket
+- Her hareketin nedeni, set × tekrar, RIR, dinlenme süresi, teknik adımları, sık hata, alternatifi ve Almancası
+- Ağırlık defteri: her seti kg ve tekrarla kaydet, mola sayacı, ne zaman ağırlık artıracağını söyler
+- Seviye (Başlangıç / Orta) ve antrenman günleri vardiyaya göre değiştirilebilir
 - İnternetsiz çalışır, veriler sadece telefonda kalır
 
 Uygulama: https://nurikaradeniz.github.io/C-zdan/formfit/
