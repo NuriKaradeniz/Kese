@@ -221,6 +221,9 @@ h2{font-family:var(--f-display);font-weight:600;font-size:1.05rem;margin:0;displ
 .eye-btn{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid color-mix(in srgb,var(--accent-ink) 40%,transparent);background:color-mix(in srgb,var(--accent-ink) 12%,transparent);color:var(--accent-ink);display:grid;place-items:center;cursor:pointer;padding:0}
 .eye-btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .eye-btn:active{transform:scale(.94)}
+.paste-box{display:grid;gap:8px}
+.paste-box textarea{font-family:var(--f-mono);font-size:.8rem}
+.paste-box .primary{padding:10px}
 /* icons */
 .crest{width:64px;height:63px;flex:none;color:var(--ink)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -356,7 +359,12 @@ h2{font-family:var(--f-display);font-weight:600;font-size:1.05rem;margin:0;displ
     <div class="backup">
       <button type="button" id="exportBtn">Yedek al</button>
       <label for="importFile">Yedeği geri yükle</label>
-      <input type="file" id="importFile" accept="application/json,.json" hidden>
+      <input type="file" id="importFile" accept="application/json,.json,text/plain" hidden>
+      <button type="button" id="pasteBtn">Metinden yükle</button>
+    </div>
+    <div class="paste-box" id="pasteBox" hidden>
+      <textarea class="field" id="pasteText" rows="4" placeholder="Kopyaladığın yedek metnini buraya yapıştır" aria-label="Yedek metni"></textarea>
+      <button type="button" class="primary" id="pasteGo">Yükle</button>
     </div>
   </section>
   <div class="status" id="status">İnternetsiz çalışır · Offline</div>
@@ -653,16 +661,30 @@ $("exportBtn").onclick=async()=>{
   }catch(e){if(e.name==="AbortError")return}
   const a=document.createElement("a");a.href=URL.createObjectURL(file);a.download=name;a.click();
 };
+// a backup is merged into what is already here, so entries added since are kept
+function importBackup(text){
+  const s=JSON.parse(text);
+  if(!s||!Array.isArray(s.expenses))throw 0;
+  let cur;try{cur=JSON.parse(localStorage.getItem("cuzdan-v1"))||{}}catch{cur={}}
+  const have=Array.isArray(cur.expenses)?cur.expenses:[];
+  const ids=new Set(have.map(e=>e.id));
+  const added=s.expenses.filter(e=>e&&e.amount>0&&e.date&&!ids.has(e.id));
+  localStorage.setItem("cuzdan-v1",JSON.stringify({
+    budget:+cur.budget||+s.budget||0,
+    limit:+cur.limit||+s.limit||0,
+    limitSince:cur.limitSince||s.limitSince||"",
+    expenses:have.concat(added)}));
+  try{sessionStorage.setItem("kese-imported",String(added.length))}catch{}
+  location.reload();
+}
 $("importFile").onchange=async e=>{
   const f=e.target.files[0];if(!f)return;
-  try{
-    const s=JSON.parse(await f.text());
-    if(!Array.isArray(s.expenses))throw 0;
-    localStorage.setItem("cuzdan-v1",JSON.stringify({budget:+s.budget||0,limit:+s.limit||0,limitSince:s.limitSince||"",expenses:s.expenses}));
-    location.reload();
-  }catch{toast("Bu dosya bir Kese yedeği değil")}
+  try{importBackup(await f.text())}catch{toast("Bu dosya bir Kese yedeği değil")}
   e.target.value="";
 };
+$("pasteBtn").onclick=()=>{$("pasteBox").hidden=!$("pasteBox").hidden;if(!$("pasteBox").hidden)$("pasteText").focus()};
+$("pasteGo").onclick=()=>{try{importBackup($("pasteText").value.trim())}catch{toast("Bu metin bir Kese yedeği değil")}};
+try{const n=sessionStorage.getItem("kese-imported");if(n!==null){sessionStorage.removeItem("kese-imported");setTimeout(()=>toast(n+" kayıt yüklendi ✓"),300)}}catch{}
 
 /* ---- tips ---- */
 const TIPCATS=[
