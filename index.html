@@ -224,6 +224,15 @@ h2{font-family:var(--f-display);font-weight:600;font-size:1.05rem;margin:0;displ
 .paste-box{display:grid;gap:8px}
 .paste-box textarea{font-family:var(--f-mono);font-size:.8rem}
 .paste-box .primary{padding:10px}
+.backup-nag{display:grid;grid-template-columns:auto 1fr;gap:10px 12px;align-items:center;background:color-mix(in srgb,var(--warn) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--warn) 45%,transparent);border-radius:16px;padding:14px 16px}
+.nag-ic{width:36px;height:36px;border-radius:10px;padding:8px;background:var(--warn);color:var(--surface)}
+.nag-txt{display:grid;gap:2px;min-width:0}
+.nag-txt b{font-weight:700}
+.nag-txt span{font-size:.85rem;color:var(--muted)}
+.nag-btns{grid-column:1/-1;display:grid;grid-template-columns:1fr auto;gap:8px}
+.nag-go{border:0;border-radius:10px;padding:11px;background:var(--warn);color:var(--surface);font-weight:700;cursor:pointer}
+.nag-later{border:1px solid var(--line);border-radius:10px;padding:11px 14px;background:var(--surface);color:var(--ink);font-weight:600;cursor:pointer}
+.last-backup{margin:0;font-size:.82rem;font-weight:600;text-align:center}
 /* icons */
 .crest{width:64px;height:63px;flex:none;color:var(--ink)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -268,6 +277,14 @@ h2{font-family:var(--f-display);font-weight:600;font-size:1.05rem;margin:0;displ
     </div>
   </header>
   <div class="view" id="viewMoney">
+  <section class="backup-nag" id="backupNag" hidden role="alert">
+    <span class="ic nag-ic" data-ic="save"></span>
+    <div class="nag-txt"><b id="nagTitle">Yedek alma zamanı</b><span id="nagSub"></span></div>
+    <div class="nag-btns">
+      <button type="button" class="nag-go" id="nagGo">Şimdi yedek al</button>
+      <button type="button" class="nag-later" id="nagLater">Yarın</button>
+    </div>
+  </section>
 
   <section class="hero" id="hero">
     <div>
@@ -355,7 +372,8 @@ h2{font-family:var(--f-display);font-weight:600;font-size:1.05rem;margin:0;displ
 
   <section class="card">
     <div class="titled"><span class="ic h-ic" data-ic="save"></span><h2>Yedek <span class="de">Sicherung</span></h2></div>
-    <p style="margin:0;font-size:.88rem;color:var(--muted)">Veriler sadece bu telefonda duruyor. Ayda bir yedek al, telefon değişirse geri yüklersin.</p>
+    <p style="margin:0;font-size:.88rem;color:var(--muted)">Kayıtların sadece bu telefonda, bu simgenin içinde duruyor. <b>Ana ekrandaki Kese simgesini silersen kayıtlar da silinir.</b> Haftada bir yedek al ve dosyayı iCloud Drive'a kaydet.</p>
+    <p class="last-backup" id="lastBackup"></p>
     <div class="backup">
       <button type="button" id="exportBtn">Yedek al</button>
       <label for="importFile">Yedeği geri yükle</label>
@@ -533,6 +551,7 @@ function render(){
   $("sIncome").textContent="+"+eur(income);
   $("sSpent").textContent="−"+eur(spent);
   renderLimit();
+  if(typeof renderBackup==="function")renderBackup();
 
   // categories
   const by={};outs.forEach(e=>by[e.cat]=(by[e.cat]||0)+e.amount);
@@ -657,10 +676,38 @@ $("exportBtn").onclick=async()=>{
   const name=`kese-yedek-${today()}.json`;
   const file=new File([data],name,{type:"application/json"});
   try{
-    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});return}
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});backupDone();return}
   }catch(e){if(e.name==="AbortError")return}
   const a=document.createElement("a");a.href=URL.createObjectURL(file);a.download=name;a.click();
+  backupDone();
 };
+
+/* ---- backup reminder: weekly, and sooner when many new entries pile up ---- */
+const BACKUP_DAYS=7, BACKUP_ENTRIES=15;
+function backupInfo(){
+  let last=0,snooze=0,count=0,all=[];
+  try{last=+localStorage.getItem("kese-last-backup")||0;snooze=+localStorage.getItem("kese-backup-snooze")||0;count=+localStorage.getItem("kese-backup-count")||0}catch{}
+  try{all=JSON.parse(localStorage.getItem("cuzdan-v1")||"{}").expenses||[]}catch{}
+  return {last,snooze,count,total:all.length,newSince:Math.max(0,all.length-count)};
+}
+function backupDone(){
+  const i=backupInfo();
+  try{localStorage.setItem("kese-last-backup",String(Date.now()));localStorage.setItem("kese-backup-count",String(i.total));localStorage.removeItem("kese-backup-snooze")}catch{}
+  renderBackup();toast("Yedek alındı ✓ Dosyayı iCloud Drive'da sakla");
+}
+function renderBackup(){
+  const i=backupInfo(), now=Date.now(), days=i.last?Math.floor((now-i.last)/864e5):null;
+  const lb=$("lastBackup");
+  if(lb)lb.textContent=i.last?`Son yedek: ${new Date(i.last).toLocaleDateString("tr-TR")} (${days===0?"bugün":days+" gün önce"})`:"Henüz hiç yedek almadın.";
+  const due=i.total>0&&(!i.last||days>=BACKUP_DAYS||i.newSince>=BACKUP_ENTRIES)&&now>i.snooze;
+  $("backupNag").hidden=!due;
+  if(due){
+    $("nagTitle").textContent=i.last?"Yedek alma zamanı":"Henüz hiç yedek almadın";
+    $("nagSub").textContent=i.last?`Son yedek ${days} gün önce · ${i.newSince} yeni kayıt yedeksiz`:`${i.total} kaydın sadece bu telefonda duruyor`;
+  }
+}
+$("nagGo").onclick=()=>$("exportBtn").click();
+$("nagLater").onclick=()=>{try{localStorage.setItem("kese-backup-snooze",String(Date.now()+864e5))}catch{}$("backupNag").hidden=true};
 // a backup is merged into what is already here, so entries added since are kept
 function importBackup(text){
   const s=JSON.parse(text);
